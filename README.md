@@ -381,3 +381,7 @@ benches/        criterion benchmarks
 docs/           architecture, consistency, ADRs
 scripts/        local-cluster.sh, failover-demo.sh
 ```
+
+## License
+
+MIT — see [LICENSE](LICENSE).
