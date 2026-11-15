@@ -1,0 +1,15 @@
+#!/bin/sh
+# Builds ironclad-server's arguments from the snap configuration (snap set ironclad ...).
+set -eu
+id=$(snapctl get id)
+if [ -z "$id" ]; then
+  echo "no node id: run 'sudo snap set ironclad id=1'" >&2
+  exit 1
+fi
+set -- --id "$id" --data-dir "$SNAP_COMMON/data"
+for m in $(snapctl get members); do set -- "$@" --member "$m"; done
+listen=$(snapctl get listen)
+[ -n "$listen" ] && set -- "$@" --listen "$listen"
+peer_listen=$(snapctl get peer-listen)
+[ -n "$peer_listen" ] && set -- "$@" --peer-listen "$peer_listen"
+exec "$SNAP/bin/ironclad-server" "$@"

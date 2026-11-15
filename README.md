@@ -227,6 +227,36 @@ stopped, without re-applying or skipping anything.
 
 ---
 
+## Install
+
+Packages are built for 64-bit Linux (amd64) on every release.
+
+**Snap** (any distribution with snapd):
+
+```bash
+sudo snap install ironclad
+sudo snap set ironclad id=1          # starts a single-node server
+ironclad set hello world
+```
+
+**APT** (Ubuntu 22.04+, Debian 12+):
+
+```bash
+sudo install -d -m 0755 /etc/apt/keyrings
+curl -fsSL https://berdfandrade.github.io/ironclad-site/apt/ironclad.gpg | sudo tee /etc/apt/keyrings/ironclad.gpg > /dev/null
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/ironclad.gpg] https://berdfandrade.github.io/ironclad-site/apt stable main" | sudo tee /etc/apt/sources.list.d/ironclad.list
+sudo apt update && sudo apt install ironclad
+sudo systemctl enable --now ironclad # node settings: /etc/default/ironclad
+```
+
+**.deb only:** download `ironclad_amd64.deb` from the
+[latest release](https://github.com/berdfandrade/ironclad/releases/latest) and
+run `sudo apt install ./ironclad_amd64.deb`.
+
+The service starts disabled so the node id and member list can be set first;
+see the [install guide](https://berdfandrade.github.io/ironclad-site/docs.html#install).
+Packaging lives in `packaging/deb`, `snap/` and `.github/workflows/release.yml`.
+
 ## Getting started
 
 Requires Rust 1.89 or newer (edition 2024).

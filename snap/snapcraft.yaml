@@ -1,0 +1,53 @@
+name: ironclad
+base: core24
+adopt-info: ironclad
+summary: Distributed key-value store with an LSM engine and Raft consensus
+description: |
+  Ironclad is a distributed key-value store written from scratch in Rust: an
+  LSM-tree storage engine (write-ahead log, SSTables, bloom filters,
+  compaction) replicated with Raft. A cluster of three or five nodes survives
+  the loss of a minority.
+
+  The `ironclad` command is the client. The server is a service that stays
+  disabled until it is given a node id:
+
+      sudo snap set ironclad id=1
+
+  For a cluster, set the same member list on every node, each with its own id:
+
+      sudo snap set ironclad id=1 listen=0.0.0.0:6001 peer-listen=0.0.0.0:7001 \
+        members="1=10.0.0.1:6001=10.0.0.1:7001 2=10.0.0.2:6001=10.0.0.2:7001 3=10.0.0.3:6001=10.0.0.3:7001"
+
+  Documentation: https://berdfandrade.github.io/ironclad-site/docs.html
+license: MIT
+website: https://berdfandrade.github.io/ironclad-site/
+source-code: https://github.com/berdfandrade/ironclad
+issues: https://github.com/berdfandrade/ironclad/issues
+grade: stable
+confinement: strict
+
+parts:
+  ironclad:
+    plugin: rust
+    source: .
+    build-environment:
+      - CARGO_PROFILE_RELEASE_DEBUG: "0"
+    override-pull: |
+      craftctl default
+      craftctl set version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
+  wrapper:
+    plugin: dump
+    source: snap/local
+    organize:
+      server-wrapper: bin/server-wrapper
+
+apps:
+  ironclad:
+    command: bin/ironclad-cli
+    plugs: [network]
+  server:
+    command: bin/server-wrapper
+    daemon: simple
+    install-mode: disable
+    restart-condition: on-failure
+    plugs: [network, network-bind]

@@ -1,0 +1,22 @@
+[Unit]
+Description=Ironclad distributed key-value store
+Documentation=https://berdfandrade.github.io/ironclad-site/docs.html
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Node id, members and listen addresses live in /etc/default/ironclad.
+EnvironmentFile=/etc/default/ironclad
+ExecStart=/usr/bin/ironclad-server --data-dir /var/lib/ironclad $IRONCLAD_ARGS
+DynamicUser=yes
+StateDirectory=ironclad
+Restart=on-failure
+RestartSec=2
+LimitNOFILE=65536
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

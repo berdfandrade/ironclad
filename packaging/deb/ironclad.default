@@ -1,0 +1,14 @@
+# Arguments for ironclad-server, used by the systemd unit (ironclad.service).
+# Data is kept in /var/lib/ironclad.
+#
+# Single node, clients on 127.0.0.1:6001:
+IRONCLAD_ARGS="--id 1"
+#
+# Cluster: every node lists every member, including itself, and uses its own id.
+# IRONCLAD_ARGS="--id 1 --listen 0.0.0.0:6001 --peer-listen 0.0.0.0:7001 \
+#   --member 1=10.0.0.1:6001=10.0.0.1:7001 \
+#   --member 2=10.0.0.2:6001=10.0.0.2:7001 \
+#   --member 3=10.0.0.3:6001=10.0.0.3:7001"
+#
+# The membership is fixed once a node has data: decide it before the first start.
+# Then: sudo systemctl enable --now ironclad

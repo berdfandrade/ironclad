@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.89"
 license = "MIT"
+description = "Distributed key-value store with a hand-written LSM storage engine and Raft consensus"
+repository = "https://github.com/berdfandrade/ironclad"
+homepage = "https://berdfandrade.github.io/ironclad-site/"
+readme = "README.md"
 
 [dependencies]
 bincode = "1.3"
@@ -34,3 +38,24 @@ debug = 1
 [[bench]]
 name = "storage"
 harness = false
+
+# Debian package, built with `cargo deb` (see packaging/deb).
+[package.metadata.deb]
+maintainer = "Bernardo Andrade <96706881+berdfandrade@users.noreply.github.com>"
+section = "database"
+priority = "optional"
+depends = "$auto"
+extended-description = """\
+Ironclad replicates data with Raft and keeps it in an LSM-tree storage engine \
+with a write-ahead log, SSTables, bloom filters and compaction. A cluster of \
+three or five nodes survives the loss of a minority. This package ships the \
+server, the ironclad-cli client and a systemd unit (disabled by default)."""
+assets = [
+  ["target/release/ironclad-server", "usr/bin/", "755"],
+  ["target/release/ironclad-cli", "usr/bin/", "755"],
+  ["packaging/deb/ironclad.default", "etc/default/ironclad", "644"],
+  ["README.md", "usr/share/doc/ironclad/README.md", "644"],
+]
+conf-files = ["/etc/default/ironclad"]
+maintainer-scripts = "packaging/deb/"
+systemd-units = { unit-name = "ironclad", enable = false, start = false }

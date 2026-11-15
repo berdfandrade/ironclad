@@ -1,0 +1,17 @@
+#!/bin/sh
+# Runs on install and on every `snap set ironclad ...`.
+set -eu
+id=$(snapctl get id)
+[ -z "$id" ] && exit 0
+case "$id" in
+  0|*[!0-9]*) echo "id must be a positive integer, got '$id'" >&2; exit 1 ;;
+esac
+for m in $(snapctl get members); do
+  case "$m" in
+    *=*=*) ;;
+    *) echo "member '$m' must be id=client_addr=peer_addr" >&2; exit 1 ;;
+  esac
+done
+# Start the server once it has an id, and restart it to pick up changes.
+snapctl start --enable ironclad.server
+snapctl restart ironclad.server
