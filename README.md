@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/logo.png" alt="Ironclad — distributed key-value store written in Rust" width="720">
+</p>
+
 # Ironclad
 
 **A distributed key-value database built from scratch in Rust.**
