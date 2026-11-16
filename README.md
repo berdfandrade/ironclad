@@ -12,6 +12,12 @@ It is a small cousin of systems like etcd, CockroachDB's storage layer or
 TiKV: a custom LSM-tree storage engine at the bottom, the Raft consensus
 algorithm in the middle, and a binary TCP protocol on top.
 
+<p align="center">
+  <a href="https://berdfandrade.github.io/ironclad-site/#demo"><img src="docs/assets/demo-thumbnail.jpg" alt="Demo video: a 3-node cluster loses its leader and keeps serving" width="720"></a>
+  <br>
+  <sub>▶ 57-second demo on a real 3-node cluster: kill the leader, a new one takes over, no data lost.</sub>
+</p>
+
 ```console
 $ ironclad-cli set user:123 '{"name":"Bernardo"}'
 OK
